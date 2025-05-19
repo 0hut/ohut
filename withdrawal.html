@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Request Withdrawal | Ohut</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    .container { 
+      font-family: Arial, sans-serif; background: #f4f6f9; display: flex; 
+      align-items: center; justify-content: center; height: 100vh; margin: 0;
+    }
+    .card {
+      background: #fff; padding: 2rem; border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1); width: 100%; max-width: 400px;
+    }
+    h2 { text-align: center; margin-bottom: 1rem; color: red;}
+    .field { margin-bottom: 1rem; }
+    label { display: block; margin-bottom: .5rem; font-weight: bold; }
+    input, select {
+      width: 100%; padding: .75rem; font-size: 1rem;
+      border: 1px solid #ccd0d5; border-radius: 4px;
+    }
+    button {
+      width: 40%; padding: .75rem; background: #e74c3c;
+      color: white; border: none; border-radius: 20px; font-size: 1rem;
+      cursor: pointer;
+      margin-left: 30%;
+    }
+
+    button:disabled { background: #aac7f5; cursor: not-allowed; }
+    .message {
+      margin-top: 1rem; padding: .75rem; border-radius: 4px;
+      display: none;
+    }
+    #currentInterest {
+      width: 100%; background-color: #032B44;
+      border-radius: 20px;
+      color: white;
+      padding-left: 20px;
+      padding-top: 15px;
+      height: 80px;
+    }
+    span {
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .message.success { background: #d1fae5; color: #065f46; }
+    .message.error   { background: #fee2e2; color: #991b1b; }
+    .card a {
+      margin-left: 80%;
+       color:grey;
+       text-decoration: none;
+      }
+    .footer {
+      background-color: #032B44;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+
+    }
+
+
+    header {
+
+      font-family: 'Poppins', sans-serif;
+        background-color: #032B44;
+        color: white;
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+           }
+    header h1 {
+        font-size: 30px;
+    }
+    header a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        background-color: #e74c3c;
+        padding: 8px 16px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+          
+    }
+    header a:hover {
+        background-color: #c0392b;
+    }
+     @media (max-width: 600px) {
+        header h1 {
+            font-size: 20px;
+        }
+    }
+    header img {
+      width: 120px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+
+    
+<header>
+    <img src="Ohut Logo.png" alt="Logo"> <h1>Request Withdrawal</h1>
+    <a href="dashboard.html"><i class="fas fa-arrow-left"></i> Back</a>
+</header>
+<div  class="container"> 
+  <div class="card">
+    
+   
+    <div id="currentInterest" class="field">
+      <label>Interest Balance</label>
+      <p>₦<span id="interestAmount">0.00</span></p>
+    </div>
+
+    <div id="msgSuccess" class="message success"></div>
+    <div id="msgError" class="message error"></div>
+    <div class="field">
+      <label for="withdrawAmt">Amount (₦2,000–20,000)</label>
+      <input type="number" id="withdrawAmt" placeholder="Enter amount" />
+    </div>
+    <div class="field">
+      <label for="acctNumber">Account Number</label>
+      <input type="text" id="acctNumber" placeholder="e.g. 0123456789" />
+    </div>
+    <div class="field">
+      <label for="acctName">Account Name</label>
+      <input type="text" id="acctName" placeholder="Your full name" />
+    </div>
+    <div class="field">
+      <label for="bankName">Bank Name</label>
+      <input type="text" id="bankName" placeholder="e.g. Zenith Bank" />
+    </div>
+
+    <button id="withdrawBtn">Submit Request</button>
+
+  </div>
+</div>
+  <div class="footer">
+    &copy; 2025 Ohut. All rights reserved.
+  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import {
+  getFirestore, doc, getDoc, updateDoc, collection, addDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import {
+  getAuth, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyD5d0apSRT-c40McXQ4V5xlWx7QkqJvJxQ",
+  authDomain: "thirdohut.firebaseapp.com",
+  projectId: "thirdohut",
+  storageBucket: "thirdohut.appspot.com",
+  messagingSenderId: "512435763604",
+  appId: "1:512435763604:web:a495c1a53c18d4acc7f781"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// DOM Elements
+const interestDisplay = document.getElementById('interestAmount');
+const withdrawInput   = document.getElementById('withdrawAmt');
+const acctNumberInput = document.getElementById('acctNumber');
+const acctNameInput   = document.getElementById('acctName');
+const bankNameInput   = document.getElementById('bankName');
+const withdrawBtn     = document.getElementById('withdrawBtn');
+const msgSuccess      = document.getElementById('msgSuccess');
+const msgError        = document.getElementById('msgError');
+
+let currentUserId = null;
+let currentInterest = 0;
+
+// Message display helper
+function showMessage(el, text) {
+  el.textContent = text;
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 5000);
+}
+
+// Fetch interest balance
+async function fetchInterest() {
+  try {
+    const userRef = doc(db, 'users', currentUserId);
+    const snap    = await getDoc(userRef);
+    if (snap.exists()) {
+      currentInterest = snap.data().interestBln || 0;
+      interestDisplay.textContent = currentInterest.toFixed(2);
+    }
+  } catch (e) {
+    console.error('Error fetching interest balance:', e);
+  }
+}
+
+// Withdraw button click handler
+withdrawBtn.addEventListener('click', async () => {
+  msgError.style.display = 'none';
+  msgSuccess.style.display = 'none';
+
+  const amt   = parseFloat(withdrawInput.value);
+  const acctN = acctNumberInput.value.trim();
+  const acctNm= acctNameInput.value.trim();
+  const bankN = bankNameInput.value.trim();
+
+  // Basic validation
+  if (isNaN(amt) || !acctN || !acctNm || !bankN) {
+    return showMessage(msgError, 'All fields are required and amount must be valid.');
+  }
+  if (amt < 2000 || amt > 20000) {
+    return showMessage(msgError, 'Amount must be between ₦2,000 and ₦20,000.');
+  }
+  if (amt > currentInterest) {
+    return showMessage(msgError, 'Insufficient interest balance.');
+  }
+
+  withdrawBtn.disabled = true;
+  try {
+    // Create pending withdrawal
+    await addDoc(collection(db, 'pendingWithdrawals'), {
+      userId: currentUserId,
+      amount: amt,
+      accountNumber: acctN,
+      accountName: acctNm,
+      bankName: bankN,
+      status: 'pending',
+      requestedAt: serverTimestamp()
+    });
+
+    // Deduct the interest balance immediately
+    const userRef = doc(db, 'users', currentUserId);
+    await updateDoc(userRef, {
+      interestBln: currentInterest - amt
+    });
+
+    showMessage(msgSuccess, 'Withdrawal request submitted and balance updated.');
+    
+    // Clear form
+    withdrawInput.value = acctNumberInput.value = acctNameInput.value = bankNameInput.value = '';
+    
+    // Refresh balance
+    fetchInterest();
+
+  } catch (e) {
+    console.error('Error submitting request:', e);
+    showMessage(msgError, 'Error submitting request.');
+  } finally {
+    withdrawBtn.disabled = false;
+  }
+});
+
+// Check user auth state
+onAuthStateChanged(auth, user => {
+  if (user) {
+    currentUserId = user.uid;
+    fetchInterest();
+  } else {
+    alert('Please log in to request a withdrawal.');
+    window.location.href = 'signUp.html';
+  }
+});
+
+  </script>
+
+</body>
+</html>
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="keywords" content="HTML, CSS">
+ 
+   <title> Withdrawal </title>
+   
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+<meta http-equiv="X-UA-Compatible"content="IE=edge">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" >
+
+</head>
+<body>
+
+      
+    
+
+   
+ <div class="container">
+
+<style>
+
+.bottomNavBox {
+bottom: 0;
+left: 0;
+position: fixed;
+justify-content: center;
+align-items: center;
+width: 100%;
+z-index: 1;
+
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+}
+
+.bottomNav {
+width: 100%;
+height: 80px;
+background-color: #eee;
+justify-content: center;
+align-items: center;
+display: flex;
+z-index: 1;
+}
+
+
+  .bottomNav button {
+background: #eee;
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+  .bottomNav button i {
+color: #8B0A0A;
+  font-size: 30px;
+
+}
+button img {
+width: 35px;
+height: auto;
+}
+
+body {
+
+font-family: 'Poppins', sans-serif;
+background-color: #eee;
+height: 100hv;
+width: 100%;
+padding: 0px;
+margin: 0px;
+}
+
+.container {
+width: 100%;
+
+}
+
+.BckBtn {
+padding: 5px;
+margin-left: 80%;
+border-radius: 10px;
+
+margin-right: 5%;
+position: absolute;
+margin-top: 50px;
+
+color: grey;
+font-size: 14px;
+}
+
+.logo img {
+width: 150px;
+height: auto;
+position: relative;
+
+}
+
+input {
+width: 80%;
+height: 40px;
+margin-left: 10%;
+padding: 0;
+margin-bottom: 10px;
+}
+
+::placeholder {
+padding-left: 10px;
+font-size: 14px;
+}
+/*Account Balance*/
+.depositAcct {
+width: 80%;
+height: 100%;
+background-color: white;
+border-radius: 10px;
+margin-left: 10%;
+color: black;
+padding: 0px;
+margin-top: 30px;
+margin-bottom: 100px;
+}
+.depositBox img { 
+width: 90%;
+height: auto;
+margin-left: 5%;
+margin-top: 20px;
+}
+
+ button {
+font-size: 16px;
+background-color:  #e74c3c;
+border-radius: 20px;
+width: 40%;
+margin-left: 30%;
+margin-bottom: 20px;
+margin-top: 10px;
+padding: 10px;
+color: white;
+}
+
+
+button:hover{
+background-color: #333;
+}
+h4 {
+color: red;
+text-align: center;
+padding-top: 20px;
+}
+#balance {
+    font-weight: bold;
+width: 80%;
+margin-left: 10%;
+
+background-color: #032B44;
+border-radius: 10px;
+}
+
+#balance h2 {
+    font-weight: bold;
+font-size: 18px;
+padding: 20px;
+text-align: center;
+color: white;
+}
+
+</style>
+
+
+
+<a href="dashboard.html"><div class="BckBtn">Back</div> </a>
+ 
+
+<div class="logo"><img src="Ohut Logo.png"/></div>
+ <div class="depositAcct">
+<div class="depositAlign">
+        <section id="deposit">
+            <h4>Withdrawal Details</h4>
+<p id="result"></p>
+            <input type="number" id="withdrawAmt" placeholder="Enter amount" required>
+           
+
+ <input type="number" id="withdrawAcct" placeholder="Account Number" required>
+
+ <input type="text" id="withdrawBank" placeholder="Bank" required>
+
+ <input type="text" id="withdrawName" placeholder="Account Name" required>
+
+ <button onclick="withdrawalDetails()">Next</button>
+        </section>
+
+    </main>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>
+
+
+
+
+ -->

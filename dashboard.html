@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="keywords" content="HTML, CSS">
+<meta http-equiv="X-UA-Compatible" content="1e=edge" >
+
+   <title> Home | Ohut</title>
+   
+<link rel="stylesheet" href="dashboard.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" >
+
+</head>
+<body>
+
+      <script> function redirectToPage(url) {
+  if (url !== "") {
+    window.location.href = url;
+  }
+} </script>
+      
+ <div class="container">
+
+
+<select class="headingBox" id="dropdown" onchange="redirectToPage(this.value)">
+<option id="userNameBox" ></option>
+<option id="logoutBtn"> Logout </option>
+
+</select>
+
+
+
+<div class="logo"><img src="Ohut Logo.png"/></div>
+
+<div class="AcctBln">
+<p>Account Balance: <br/><i class="fa-solid fa-naira-sign"></i> <span id="AccountBln"> 0.00</span> </p>
+<img src="IMG_1539.PNG"/>
+</div>
+
+   <div class="slider-container">
+        <div class="slider">
+
+            <div class="box box1"> <p> Total Income <br/><i class="fa-solid fa-naira-sign"></i> <span id="incomeBln"> 0.00</span> </p> </div>
+
+
+
+<div class="box box4"> <p>Total Investment <br/><i class="fa-solid fa-naira-sign"></i> <span id="totalInvestBln"> 0.00</span> </p> </div>
+    
+           <div class="box box3"> <p>Total Deposit<br/><i class="fa-solid fa-naira-sign"></i> <span id="totalApprovedDeposits"> 0.00</span> </p> </div>
+
+
+         <div class="box box6"> <p>Pending Deposit  <br/><i class="fa-solid fa-naira-sign"></i> <span id="totalPendingDeposits"> 0.00</span> </p> </div>
+
+         <div class="box box7"> <p>Referral Earn<br/><i class="fa-solid fa-naira-sign"></i> <span id="totalReferralBonus"> 0.00</span> </p> </div>
+    </div>
+
+
+</div>
+
+<div class="viewLog">
+ 
+
+<div class="imgBox">
+<a href="deposit.html"><img src="IMG_1392.PNG"/> </a>
+</div>
+
+<div class="imgBox">
+<a href="withdrawal.html"><img src="IMG_1393.PNG"/> </a>
+</div>
+
+<div class="imgBox">
+<a href="transfer.html"><img src="IMG_1395.PNG"/> </a>
+</div>
+
+<div class="imgBox">
+<a href="2fa.html"><img src="IMG_1390.PNG"/> </a>
+</div>
+
+
+
+<div class="imgBox">
+<a href="support.html"><img src="IMG_1388.PNG"/> </a>
+</div>
+
+
+<div class="imgBox" id="viewAllBtn">
+<a href="View.html"><img src="IMG_1396.PNG"/> </a>
+</div>
+
+
+<div class="imgBox"id="hideViewAll">
+<a href="depositHistory.html"><img src="IMG_1394.PNG"/> </a>
+</div>
+
+
+<div class="imgBox" id="hideViewAll">
+<a href="transaction.html"><img src="IMG_1387.PNG"/></a>
+</div>
+
+<div class="imgBox" id="hideViewAll">
+<a href="WithdrawalLog.html"><img src="IMG_1383.PNG"/> </a>
+</div>
+
+<div class="imgBox" id="hideViewAll">
+<a href="investLog.html"><img src="IMG_1384.PNG"/> </a>
+</div>
+
+<div class="imgBox" id="hideViewAll">
+<a href="interest.html"><img src="IMG_1525.PNG"/> </a>
+</div>
+
+<div class="imgBox" id="hideViewAll">
+<a href="referral.html"><img src="IMG_1524.PNG"/> </a>
+</div>
+
+</div>
+
+<h2 class="investText">Investment Plan</h2>
+<div class="packages">
+<div class="investBox1">
+<div class="investBoxGroup">
+<img src="Bronze.PNG"/>
+<h1> Bronze </h1> 
+<p> Get started with our entry-level investment package ||<br/>
+<i class="fa-solid fa-naira-sign"></i> 500 daily for 60 Times  <br/><b> Capital back: </b>Yes </p>
+
+<button class="investButton" onclick="packageAmount1()"> <i class="fa-solid fa-naira-sign"></i> 2,000 </button>
+
+</div>
+</div>
+
+
+
+
+
+<div class="investBox1">
+<div class="investBoxGroup">
+<img src="Silver.PNG"/>
+<h1> Silver </h1> 
+<p> Grow your wealth with our mid-tier investment package ||<br/>
+<i class="fa-solid fa-naira-sign"></i> 1,000 daily for 60 Times  <br/><b> Capital back: </b>Yes </p>
+
+<button class="investButton" onclick="packageAmount2()"> <i class="fa-solid fa-naira-sign"></i> 4,000 </button>
+
+</div>
+</div>
+
+
+
+
+
+<div class="investBox1">
+<div class="investBoxGroup">
+<img src="Gold.PNG"/>
+<h1> Gold </h1> 
+<p> Elevate your investments with our <br/>high-end package ||<br/>
+<i class="fa-solid fa-naira-sign"></i> 2000 daily for 60 Times  <br/><b> Capital back: </b>Yes </p>
+
+<button class="investButton" onclick="packageAmount3()"> <i class="fa-solid fa-naira-sign"></i> 8,000 </button>
+
+</div>
+</div>
+
+
+
+
+<div class="investBox1">
+<div class="investBoxGroup">
+<img src="Plantinum.PNG"/>
+<h1> Platinum </h1> 
+<p> Experience premium benefits with our exclusive package ||<br/>
+<i class="fa-solid fa-naira-sign"></i> 2,500 daily for 60 Times  <br/><b> Capital back: </b>Yes </p>
+
+<button class="investButton" onclick="packageAmount4()"> <i class="fa-solid fa-naira-sign"></i> 10,000 </button>
+
+</div>
+</div>
+
+
+
+
+
+<div class="investBox1">
+<div class="investBoxGroup">
+<img src="Diamond.PNG"/>
+<h1> Diamond </h1> 
+<p> Join the elite ranks with our top-tier investment package ||<br/>
+<i class="fa-solid fa-naira-sign"></i> 25,000 daily for 60 Times  <br/><b> Capital back: </b>Yes </p>
+
+<button class="investButton" onclick="packageAmount5()"> <i class="fa-solid fa-naira-sign"></i> 100,000 </button>
+
+</div>
+</div>
+
+</div>
+
+
+<div class="referral">
+
+<div class="referralGroup">
+<h4> Invite others with your referral link: </h4>
+
+<input type="text" id="referralLink" readonly />
+<button class="refBtn" onclick="copyLink()">Copy </button>
+</div>
+</div>
+
+
+
+  
+
+
+<div class="footer">
+    &copy; 2025 Ohut. All rights reserved.
+  </div>
+
+
+
+<script type="module">
+
+
+import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { 
+  getFirestore, 
+  doc, getDoc, updateDoc, collection, getDocs, query, where, orderBy, 
+  limit
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+// Firebase config firstAPI
+const firebaseConfig = {
+  apiKey: "AIzaSyD5d0apSRT-c40McXQ4V5xlWx7QkqJvJxQ",
+  authDomain: "thirdohut.firebaseapp.com",
+  projectId: "thirdohut",
+  storageBucket: "thirdohut.firebasestorage.app",
+  messagingSenderId: "512435763604",
+  appId: "1:512435763604:web:a495c1a53c18d4acc7f781"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Investment packs
+const PACKS = [
+  { key: 'pack1', amount: 2000 },
+  { key: 'pack2', amount: 4000 },
+  { key: 'pack3', amount: 8000 },
+  { key: 'pack4', amount: 10000 },
+  { key: 'pack5', amount: 100000 },
+];
+
+// Get current user ID
+function getUserId() {
+  return localStorage.getItem('loggedInUserId') || 'defaultUser';
+}
+
+// Fetch pack investment history
+async function getPackValues(userId, key) {
+  try {
+    const userDoc = await getDoc(doc(db, "users", userId));
+    const history = userDoc.exists() ? userDoc.data()[`${key}History`] : "";
+    return history ? history.split(',').map(val => parseFloat(val.trim())) : [];
+  } catch (error) {
+    console.error('Error getting pack values:', error);
+    return [];
+  }
+}
+
+// Calculate total invested amount
+async function calculateTotalPackInvestment(userId) {
+  try {
+    const valuesArray = await Promise.all(PACKS.map(({ key }) => getPackValues(userId, key)));
+    return valuesArray.flat().reduce((total, val) => total + val, 0);
+  } catch (error) {
+    console.error('Error calculating total pack investment:', error);
+    return 0;
+  }
+}
+
+// Interest calculation
+async function calculateInterest(userId) {
+  try {
+    const userRef = doc(db, "users", userId);
+    const userSnap = await getDoc(userRef);
+    const data = userSnap.exists() ? userSnap.data() : {};
+    const lastTime = data.lastCalculationTime || Date.now();
+    const currentTime = Date.now();
+    const timeElapsed = (currentTime - lastTime) / 1000;
+    let interest = 0;
+    const valuesArray = await Promise.all(PACKS.map(({ key }) => getPackValues(userId, key)));
+    for (const values of valuesArray) {
+      interest += values.reduce((sum, val) => sum + val * 0.2 * timeElapsed / (60 * 60 * 24), 0);
+    }
+    const currentInterest = data.interestBln || 0;
+    await updateDoc(userRef, { interestBln: currentInterest + interest, lastCalculationTime: currentTime });
+  } catch (error) {
+    console.error('Error calculating interest:', error);
+  }
+}
+
+// Update UI with investments
+async function updatePackDisplays(userId) {
+  try {
+    await new Promise(resolve => setTimeout(resolve, 2000)); // delay for 2 seconds
+    for (const { key } of PACKS) {
+      const element = document.getElementById(key === 'pack1' ? 'result' : key);
+      if (element) {
+        const history = await getPackValues(userId, key);
+        element.textContent = history.join(', ') || '';
+      }
+    }
+    const total = await calculateTotalPackInvestment(userId);
+    const totalInvestElem = document.getElementById('totalInvestBln');
+    if (totalInvestElem) totalInvestElem.textContent = total;
+  } catch (error) {
+    console.error('Error updating pack displays:', error);
+  }
+}
+
+// Show account balance, interest, and user name
+async function updateUserInfo(userId) {
+  try {
+    await new Promise(resolve => setTimeout(resolve, 2000)); // delay for 2 seconds
+    const userRef = doc(db, "users", userId);
+    const userSnap = await getDoc(userRef);
+    const data = userSnap.exists() ? userSnap.data(): {};
+
+    // Update balance
+    let balance = data.balance ?? 10000;
+    document.getElementById('AccountBln').textContent = balance.toString();
+
+    // Update interest
+    const interest = data.interestBln || 0;
+    document.getElementById('incomeBln').textContent = interest.toFixed(2);
+
+    // Update user name
+    const name = data.fullName || "Unknown User";
+    const userNameElem = document.getElementById('userNameBox');
+    if (userNameElem) userNameElem.textContent = name;
+
+  } catch (error) {
+    console.error('Error updating user info:', error);
+  }
+}
+
+// Purchase a package
+async function packageAmount(amount, packKey) {
+  try {
+    const userId = getUserId();
+    const userRef = doc(db, "users", userId);
+    const userSnap = await getDoc(userRef);
+    const data = userSnap.exists() ? userSnap.data() : {};
+    const balance = data.balance || 0;
+    if (amount > balance) {
+      window.location.href = 'Unsuccessful.html';
+      return;
+    }
+    const historyKey = `${packKey}History`;
+    const history = data[historyKey] || '';
+    const newHistory = history ? `${history}, ${amount}` : `${amount}`;
+    await updateDoc(userRef, { [historyKey]: newHistory, balance: balance - amount });
+    window.location.href = 'packageSuccessful.html';
+  } catch (error) {
+    console.error('Error purchasing package:', error);
+  }
+}
+async function calculateTotalPendingDeposits() {
+  try {
+    const userId = localStorage.getItem("loggedInUserId");
+    if (!userId) return;
+
+    const depositsRef = collection(db, "pendingDeposits");
+    const pendingQuery = query(depositsRef, 
+      where("userId", "==", userId),
+      where("status", "in", ["pending", ""]) // or you can adjust this if empty status is represented differently
+    );
+
+    const snapshot = await getDocs(pendingQuery);
+
+    let totalPending = 0;
+    snapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      totalPending += data.amount || 0;
+    });
+
+    const pendingElem = document.getElementById('totalPendingDeposits');
+    if (pendingElem) pendingElem.textContent = totalPending.toLocaleString();
+  } catch (error) {
+    console.error("Error fetching total pending deposits:", error);
+  }
+}
+
+async function calculateTotalApprovedDeposits() {
+  try {
+    const userId = localStorage.getItem("loggedInUserId");
+    if (!userId) return;
+
+    const depositsRef = collection(db, "pendingDeposits");
+    const approvedQuery = query(depositsRef, 
+      where("userId", "==", userId),
+      where("status", "==", "approved")
+    );
+
+    const snapshot = await getDocs(approvedQuery);
+
+    let totalApproved = 0;
+    snapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      totalApproved += data.amount || 0;
+    });
+
+    const approvedElem = document.getElementById('totalApprovedDeposits');
+    if (approvedElem) approvedElem.textContent = totalApproved.toLocaleString();
+  } catch (error) {
+    console.error("Error fetching total approved deposits:", error);
+  }
+}
+
+
+// Bind investment buttons
+window.packageAmount1 = () => packageAmount(2000, 'pack1');
+window.packageAmount2 = () => packageAmount(4000, 'pack2');
+window.packageAmount3 = () => packageAmount(8000, 'pack3');
+window.packageAmount4 = () => packageAmount(10000, 'pack4');
+window.packageAmount5 = () => packageAmount(100000, 'pack5');
+
+// Initialize on page load
+window.addEventListener('load', async () => {
+  try {
+    const userId = getUserId();
+    await updatePackDisplays(userId);
+    await updateUserInfo(userId);
+    await calculateInterest(userId);
+    await calculateTotalPendingDeposits(); // <-- New pending deposits total
+    await calculateTotalApprovedDeposits(); // <-- New approved deposits total
+
+    // Repeat interest calculation and user info update every 3 seconds
+    setInterval(async () => {
+      await calculateInterest(userId);
+      await updateUserInfo(userId);
+      await calculateTotalPendingDeposits();
+      await calculateTotalApprovedDeposits();
+    }, 3000);
+  } catch (error) {
+    console.error('Error initializing page:', error);
+  }
+});
+
+
+
+async function setReferralLink() {
+  const userId = localStorage.getItem("loggedInUserId");
+  if (!userId) return;
+
+  const userDocRef = doc(db, "users", userId);
+  const userSnap = await getDoc(userDocRef);
+
+  if (userSnap.exists()) {
+    const userData = userSnap.data();
+    const referralCode = userData.referralCode;
+
+    const referralLink = `${window.location.origin}/signUp.html?ref=${referralCode}`;
+    const referralInput = document.getElementById('referralLink');
+    if (referralInput) referralInput.value = referralLink;
+  } else {
+    console.warn("User doc not found in Firestore");
+  }
+}
+
+// Call this function when dashboard page loads
+setReferralLink();
+
+// Copy function remains the same
+window.copyLink = function() {
+  const input = document.getElementById('referralLink');
+  input.select();
+  document.execCommand('copy');
+  alert("Referral link copied to clipboard!");
+};
+
+
+// to display referal Bonus on dashboard
+async function calculateTotalReferralBonus() {
+  const userId = localStorage.getItem("loggedInUserId");
+  if (!userId) {
+    console.warn("No logged-in user ID found");
+    return;
+  }
+
+  // Get current user doc to find referralCode
+  const userSnap = await getDoc(doc(db, "users", userId));
+  if (!userSnap.exists()) {
+    console.warn("User document not found");
+    return;
+  }
+  const referralCode = userSnap.data().referralCode;
+
+  // Query all users referred by this user
+  const referredUsersQuery = query(collection(db, "users"), where("referredBy", "==", referralCode));
+  const referredUsersSnap = await getDocs(referredUsersQuery);
+
+  let totalBonus = 0;
+
+  // For each referred user, find their first approved deposit and add 25% of amount to totalBonus
+  for (const refUserDoc of referredUsersSnap.docs) {
+    const refUserId = refUserDoc.id;
+
+    const firstApprovedDepositQuery = query(
+      collection(db, "pendingDeposits"),
+      where("userId", "==", refUserId),
+      where("status", "==", "approved"),
+      orderBy("timestamp", "asc"),
+      limit(1)
+    );
+
+    const depositsSnap = await getDocs(firstApprovedDepositQuery);
+
+    if (!depositsSnap.empty) {
+      const firstDeposit = depositsSnap.docs[0].data();
+      const amount = firstDeposit.amount || 0;
+      totalBonus += amount * 0.25;
+    }
+  }
+
+  // Show total referral bonus in the dashboard element with ID "totalReferralBonus"
+  const bonusElement = document.getElementById("totalReferralBonus");
+  if (bonusElement) {
+    bonusElement.textContent = `${totalBonus.toFixed(2)}`;
+  }
+}
+
+// Run the function when dashboard loads
+calculateTotalReferralBonus();
+
+
+// Logout section
+
+
+
+const auth = getAuth(); 
+
+function logoutUser() {
+  signOut(auth)
+    .then(() => {
+      // Successfully signed out
+      alert("You have been logged out.");
+      window.location.href = "signUp.html"; // Redirect to login page
+    })
+    .catch((error) => {
+      console.error("Error logging out:", error);
+      alert("Failed to log out. Please try again.");
+    });
+}
+
+// Example: attach to a button with id 'logoutBtn'
+document.getElementById("logoutBtn").addEventListener("click", logoutUser);
+
+</script>
+
+</body>
+
+
+<script src="slider.js"></script>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

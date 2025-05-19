@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referral Log | Ohut</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+ 
+}
+
+h4.refText {
+    text-align: center;
+    color: #333;
+    font-size: 20px;
+    margin: 30px 0 10px;
+}
+
+.referral {
+    display: flex;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.referral input {
+    flex-grow: 1;
+    height: 50px;
+    padding-left: 15px;
+    border: none;
+    background-color: #f1f1f1;
+    font-size: 14px;
+}
+
+.refBtn {
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    padding: 0 20px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    height: 50px;
+}
+
+.refBtn:hover {
+    background-color: #333;
+}
+
+.depositAcct {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin: 20px 0;
+}
+
+#transactions h4,
+#referredUsers h4 {
+    margin-top: 0;
+    color: #333;
+}
+
+ul {
+    padding: 0;
+    list-style-type: none;
+}
+
+li {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    color: #555;
+}
+
+.BckBtn {
+    display: inline-block;
+    margin: 20px;
+    font-size: 14px;
+    color: grey;
+    text-decoration: none;
+    margin-left: 90%;
+}
+
+.BckBtn:hover {
+    background-color: #333;
+    color: #fff;
+}
+
+.note {
+    font-size: 12px;
+    color: #999;
+}
+.footer {
+      background-color: #032B44;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <a href="dashboard.html" class="BckBtn">Back</a>
+
+    <h4 class="refText">Invite others with your referral link:</h4>
+
+    <div class="referral">
+        <input type="text" id="referralLink" readonly />
+        <button class="refBtn" onclick="copyLink()">Copy</button>
+    </div>
+
+    <div class="depositAcct">
+        <section id="transactions">
+            <h4>Referral Bonus History</h4>
+            <ul id="transactions-list"></ul>
+        </section>
+    </div>
+</div>
+
+    
+<div class="footer">
+    &copy; 2025 Ohut. All rights reserved.
+  </div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { 
+  getFirestore, 
+  doc, 
+  getDoc, 
+  updateDoc,
+  collection, 
+  query, 
+  where, 
+  getDocs, 
+  orderBy, 
+  limit 
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD5d0apSRT-c40McXQ4V5xlWx7QkqJvJxQ",
+  authDomain: "thirdohut.firebaseapp.com",
+  projectId: "thirdohut",
+  storageBucket: "thirdohut.appspot.com",
+  messagingSenderId: "512435763604",
+  appId: "1:512435763604:web:a495c1a53c18d4acc7f781"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function loadReferralData() {
+  const userId = localStorage.getItem("loggedInUserId");
+  if (!userId) {
+    console.warn("User not logged in or no user ID in localStorage");
+    return;
+  }
+
+  const userDocRef = doc(db, "users", userId);
+  const userSnap = await getDoc(userDocRef);
+
+  if (!userSnap.exists()) {
+    console.warn("User document not found in Firestore");
+    return;
+  }
+
+  const userData = userSnap.data();
+  const referralCode = userData.referralCode;
+
+  // Set referral link input value
+  const referralInput = document.getElementById('referralLink');
+  if (referralInput) {
+    const referralLink = `${window.location.origin}/signUp.html?ref=${referralCode}`;
+    referralInput.value = referralLink;
+  }
+
+  try {
+    const referredUsersQuery = query(collection(db, "users"), where("referredBy", "==", referralCode));
+    const referredUsersSnap = await getDocs(referredUsersQuery);
+
+    if (referredUsersSnap.empty) {
+      console.log("No referred users found.");
+      document.getElementById('transactions-list').innerHTML = `<li>No referred users yet.</li>`;
+      return;
+    }
+
+    let transactionsHtml = "";
+
+    for (const docSnap of referredUsersSnap.docs) {
+      const refUser = docSnap.data();
+      const refUserId = docSnap.id;
+      const fullName = refUser.fullName || "Unnamed User";
+
+      console.log("Processing referred user:", fullName, refUserId);
+
+      const depositsQuery = query(
+        collection(db, "pendingDeposits"), 
+        where("userId", "==", refUserId), 
+        where("status", "==", "approved"), 
+        orderBy("timestamp", "asc"), 
+        limit(1)
+      );
+
+      let bonus = 0;
+      try {
+        const depositsSnap = await getDocs(depositsQuery);
+
+        if (!depositsSnap.empty) {
+          const firstDeposit = depositsSnap.docs[0].data();
+          const amount = firstDeposit.amount || 0;
+          bonus = amount * 0.25;
+
+          console.log(`First approved deposit for ${fullName}: ₦${amount}, bonus: ₦${bonus.toFixed(2)}`);
+
+          // Check if this bonus has already been credited
+          if (!refUser.bonusCredited) {
+            // Credit the bonus to the referrer
+            const newReferralBonus = (userData.referralBonus || 0) + bonus;
+            const newBalance = (userData.balance || 0) + bonus;
+            await updateDoc(userDocRef, {
+              referralBonus: newReferralBonus,
+              balance: newBalance
+            });
+
+            // Mark the referred user as 'bonus given' to avoid duplicate bonuses
+            await updateDoc(doc(db, "users", refUserId), {
+              bonusCredited: true
+            });
+
+            console.log(`Bonus ₦${bonus.toFixed(2)} credited to referrer ${userId}`);
+          } else {
+            console.log(`Bonus for ${fullName} already credited, skipping...`);
+          }
+
+        } else {
+          console.log(`No approved deposits found for referred user ${fullName}`);
+        }
+
+      } catch (depositError) {
+        console.error("Error fetching deposits:", depositError);
+        if (depositError.message.includes('index')) {
+          alert("Firestore query requires an index. Please create the index via Firebase console.");
+        }
+      }
+
+      transactionsHtml += `<li>
+        ${fullName} <br>
+        <strong>Bonus Earned:</strong> ₦${bonus.toFixed(2)}
+      </li>`;
+    }
+
+    const transactionsList = document.getElementById('transactions-list');
+    if (transactionsList) {
+      transactionsList.innerHTML = transactionsHtml || `<li>No referred users yet.</li>`;
+    }
+
+  } catch (error) {
+    console.error("Error loading referred users:", error);
+    document.getElementById('transactions-list').innerHTML = `<li>Error loading referred users.</li>`;
+  }
+}
+
+window.copyLink = function() {
+  const input = document.getElementById('referralLink');
+  if (!input) return;
+  input.select();
+  document.execCommand('copy');
+  alert("Referral link copied to clipboard!");
+};
+
+loadReferralData();
+</script>
+
+</body>
+</html>

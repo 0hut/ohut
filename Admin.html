@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Admin Dashboard – Ohut</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,sans-serif;display:flex;min-height:100vh;background:#f7f9fc;color:#333}
+    .sidebar{width:220px;background:#111827;color:#fff;padding:20px;display:flex;flex-direction:column;gap:10px}
+    .sidebar h2{font-size:20px;margin-bottom:10px}
+    .sidebar a{color:#cbd5e1;text-decoration:none;padding:10px 15px;border-radius:6px;transition:.3s;display:flex;align-items:center}
+    .sidebar a.active{background:#1f2937;color:#fff}
+    .content{flex:1;padding:20px}
+    .topbar{background:#fff;padding:15px 20px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:20px;font-weight:bold}
+    .dashboard-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin-bottom:30px}
+    .summary-card{background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.05);font-size:18px;text-align:center}
+    .section{background:#fff;padding:20px;margin-bottom:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.05);display:none}
+    .section.active{display:block}
+    .list-container{display:flex;flex-wrap:wrap;gap:1rem}
+    .user-card,.deposit,.withdrawal-card{border:1px solid #e5e7eb;padding:15px;margin-bottom:10px;border-radius:8px;background:#f9fafb;flex:1 1 300px}
+    .status{padding:3px 8px;border-radius:4px;font-weight:bold}
+    .status.approved{color:green}
+    .status.pending{color:orange}
+    .status.declined{color:red}
+    button{padding:10px;border:none;border-radius:5px;cursor:pointer;margin-top:10px}
+    .approveBtn{background:green;color:#fff}
+    .declineBtn{background:red;color:#fff}
+    select, input[type="text"]{padding:8px;margin:10px 0;width:100%;border:1px solid #ccc;border-radius:4px}
+    @media(max-width:768px){.sidebar{width:60px}.sidebar h2,.sidebar a span{display:none}.sidebar a{text-align:center;padding:15px 0}}
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>Admin</h2>
+    <a href="#dashboard" data-target="dashboard" class="active">🏠 <span>Dashboard</span></a>
+    <a href="#deposits"  data-target="deposits">💰 <span>Deposits</span></a>
+    <a href="#users"     data-target="users">👥 <span>Users</span></a>
+    <a href="#withdrawals" data-target="withdrawals">💸 <span>Withdrawals</span></a>
+    <a href="#supports"  data-target="supports">📩 <span>Support</span></a>
+
+  </div>
+
+  <div class="content">
+    <div class="topbar">Ohut Admin Dashboard</div>
+<!--  Support Messages Section -->
+<div id="supports" class="section">
+  <h3>Support Messages</h3>
+  <div id="supportsList" class="list-container"></div>
+</div>
+
+    <div id="dashboard" class="section active">
+      <div class="dashboard-cards">
+        <div class="summary-card">Total Users<br><span id="totalUsers">0</span></div>
+        <div class="summary-card">Total Deposits<br><span id="totalDeposits">0</span></div>
+        <div class="summary-card">Approved<br><span id="totalApproved">0</span></div>
+        <div class="summary-card">Pending<br><span id="totalPending">0</span></div>
+        <div class="summary-card">Declined<br><span id="totalDeclined">0</span></div>
+      </div>
+    </div>
+
+    <div id="deposits" class="section">
+      <h3>Deposits Management</h3>
+      <select id="filterStatus">
+        <option value="all">All</option>
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="declined">Declined</option>
+      </select>
+      <div id="depositsList" class="list-container"></div>
+    </div>
+
+    <div id="users" class="section">
+      <h3>Users Management</h3>
+      <input type="text" id="searchInput" placeholder="Search users by name or email">
+      <div id="usersList" class="list-container"></div>
+    </div>
+
+    <div id="withdrawals" class="section">
+      <h3>Withdrawal Requests</h3>
+      <select id="filterWithdrawalStatus">
+        <option value="all">All</option>
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="declined">Declined</option>
+      </select>
+      <div id="withdrawalsList" class="list-container"></div>
+    </div>
+  </div>
+
+ <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    getDocs,
+    doc,
+    getDoc,
+    updateDoc,
+    query,
+    addDoc,
+    deleteDoc,
+    serverTimestamp,
+    where
+  } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD5d0apSRT-c40McXQ4V5xlWx7QkqJvJxQ",
+    authDomain: "thirdohut.firebaseapp.com",
+    projectId: "thirdohut",
+    storageBucket: "thirdohut.appspot.com",
+    messagingSenderId: "512435763604",
+    appId: "1:512435763604:web:a495c1a53c18d4acc7f781"
+  };
+  initializeApp(firebaseConfig);
+  const db = getFirestore();
+
+  // Section navigation
+  document.querySelectorAll('.sidebar a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelectorAll('.sidebar a').forEach(x => x.classList.remove('active'));
+      a.classList.add('active');
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(a.dataset.target).classList.add('active');
+    });
+  });
+
+  // Dashboard summary
+  async function loadDashboardSummary() {
+    const [usersSnap, depositsSnap] = await Promise.all([
+      getDocs(collection(db, "users")),
+      getDocs(collection(db, "pendingDeposits"))
+    ]);
+    document.getElementById("totalUsers").textContent = usersSnap.size;
+    document.getElementById("totalDeposits").textContent = depositsSnap.size;
+
+    let a = 0, p = 0, d = 0;
+    depositsSnap.forEach(docSnap => {
+      const s = docSnap.data().status;
+      if (s === "approved") a++;
+      else if (s === "pending") p++;
+      else if (s === "declined") d++;
+    });
+    document.getElementById("totalApproved").textContent = a;
+    document.getElementById("totalPending").textContent = p;
+    document.getElementById("totalDeclined").textContent = d;
+  }
+
+  // Deposits
+  async function loadDeposits(filter = "all") {
+    const snap = await getDocs(collection(db, "pendingDeposits"));
+    let items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    if (filter !== "all") items = items.filter(x => x.status === filter);
+    const c = document.getElementById("depositsList");
+    c.innerHTML = "";
+    items.forEach(d => {
+      const dt = d.timestamp?.toDate?.().toLocaleString() || "–";
+      const div = document.createElement("div");
+      div.className = "deposit";
+      div.innerHTML = `
+          <p><strong>User:</strong> ${d.userId}</p>
+          <p><strong>Amount:</strong> ₦${d.amount.toLocaleString()}</p>
+          <p><strong>Requested:</strong> ${dt}</p>
+          <p><strong>Status:</strong> <span class="status ${d.status}">${d.status.toUpperCase()}</span></p>
+          <p><a href="${d.fileURL}" target="_blank">Receipt</a></p>
+          ${d.status === "pending" ? `
+            <button class="approveBtn" onclick="approveDeposit('${d.id}', '${d.userId}', ${d.amount})">Approve</button>
+            <button class="declineBtn" onclick="declineDeposit('${d.id}')">Decline</button>` : ""}
+        `;
+      c.appendChild(div);
+    });
+  }
+
+  // Approve Deposit with referral logic
+  window.approveDeposit = async (id, uid, amt) => {
+    const uRef = doc(db, "users", uid), dRef = doc(db, "pendingDeposits", id);
+    const uSnap = await getDoc(uRef);
+    if (!uSnap.exists()) return alert("User not found");
+
+    // Update user's balance by adding deposit amount
+    await updateDoc(uRef, { balance: (uSnap.data().balance || 0) + amt });
+
+    // Check if this is user's first approved deposit
+    const depositsSnap = await getDocs(query(collection(db, "pendingDeposits"), 
+      where("userId", "==", uid), where("status", "==", "approved")));
+
+    if (depositsSnap.size === 0) {
+      // First approved deposit - check for referrer
+      const referrerId = uSnap.data().referrerId;
+      if (referrerId) {
+        const referrerRef = doc(db, "users", referrerId);
+        const referrerSnap = await getDoc(referrerRef);
+        if (referrerSnap.exists()) {
+          // Credit 25% commission to referrer balance
+          const commission = amt * 0.25;
+          await updateDoc(referrerRef, {
+            balance: (referrerSnap.data().balance || 0) + commission
+          });
+          console.log(`Referral commission ₦${commission} credited to user ${referrerId}`);
+        }
+      }
+    }
+
+    // Finally update deposit status to approved
+    await updateDoc(dRef, { status: "approved" });
+
+    loadDeposits(document.getElementById("filterStatus").value);
+    loadDashboardSummary();
+  };
+
+  window.declineDeposit = async id => {
+    await updateDoc(doc(db, "pendingDeposits", id), { status: "declined" });
+    loadDeposits(document.getElementById("filterStatus").value);
+    loadDashboardSummary();
+  };
+
+  document.getElementById("filterStatus")
+    .addEventListener("change", e => loadDeposits(e.target.value));
+
+  // Users
+  async function searchUsers(q = "") {
+    const snap = await getDocs(collection(db, "users"));
+    const c = document.getElementById("usersList"); c.innerHTML = "";
+    snap.docs.filter(d => {
+      const x = d.data(), t = q.toLowerCase();
+      return x.fullName?.toLowerCase().includes(t) || x.email?.toLowerCase().includes(t);
+    }).forEach(d => {
+      const x = d.data(), div = document.createElement("div"); div.className = "user-card";
+      div.innerHTML = `
+          <h4>${x.fullName || "—"}</h4>
+          <p><strong>Email:</strong> ${x.email || "—"}</p>
+          <p><strong>Balance:</strong> ₦${(x.balance || 0).toLocaleString()}</p>
+          <p><strong>Interest:</strong> ₦${(x.interestBln || 0).toLocaleString()}</p>
+          <p><strong>Withdrawn:</strong> ₦${(x.withdrawAmt || 0).toLocaleString()}</p>
+        `; c.appendChild(div);
+    });
+  }
+
+  document.getElementById("searchInput")
+    .addEventListener("input", e => searchUsers(e.target.value.trim()));
+
+  // Withdrawals
+  async function loadWithdrawals(filter = "all") {
+    const snap = await getDocs(collection(db, "pendingWithdrawals"));
+    let items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    if (filter !== "all") items = items.filter(x => x.status === filter);
+    const c = document.getElementById("withdrawalsList"); c.innerHTML = "";
+    items.forEach(x => {
+      const dt = x.requestedAt?.toDate?.().toLocaleString() || "–";
+      const div = document.createElement("div"); div.className = "withdrawal-card";
+      div.innerHTML = `
+          <p><strong>User:</strong> ${x.userId}</p>
+          <p><strong>Amount:</strong> ₦${x.amount.toLocaleString()}</p>
+          <p><strong>Requested:</strong> ${dt}</p>
+          <p><strong>Account:</strong> ${x.accountNumber} · ${x.accountName} (${x.bankName})</p>
+          <p><strong>Status:</strong> <span class="status ${x.status}">${x.status.toUpperCase()}</span></p>
+          ${x.status === "pending" ? `
+            <button class="approveBtn" onclick="approveWithdrawal('${x.id}', '${x.userId}', ${x.amount})">Approve</button>
+            <button class="declineBtn" onclick="declineWithdrawal('${x.id}')">Decline</button>` : ""}
+        `;
+      c.appendChild(div);
+    });
+  }
+
+  window.approveWithdrawal = async (id, uid, amt) => {
+    const uRef = doc(db, "users", uid), wRef = doc(db, "pendingWithdrawals", id);
+    const uSnap = await getDoc(uRef);
+    if (!uSnap.exists()) return alert("User not found");
+    await updateDoc(uRef, {
+      interestBln: (uSnap.data().interestBln || 0) - amt,
+      withdrawAmt: (uSnap.data().withdrawAmt || 0) + amt
+    });
+    await updateDoc(wRef, { status: "approved" });
+    loadWithdrawals(document.getElementById("filterWithdrawalStatus").value);
+    loadDashboardSummary();
+  };
+
+  window.declineWithdrawal = async id => {
+    await updateDoc(doc(db, "pendingWithdrawals", id), { status: "declined" });
+    loadWithdrawals(document.getElementById("filterWithdrawalStatus").value);
+    loadDashboardSummary();
+  };
+
+  document.getElementById("filterWithdrawalStatus")
+    .addEventListener("change", e => loadWithdrawals(e.target.value));
+
+  // Initialize
+  loadDashboardSummary();
+  loadDeposits();
+  searchUsers();
+  loadWithdrawals();
+
+
+
+  // SUPPORT MESSAGES SECTION
+async function loadSupportMessages() {
+  const snap = await getDocs(collection(db, "supportMessages"));
+  const c = document.getElementById("supportsList");
+  c.innerHTML = "";
+  snap.forEach(d => {
+    const x = d.data();
+    const div = document.createElement("div");
+    div.className = "support-card";
+    div.innerHTML = `
+      <p><strong>From:</strong> ${x.fullName || "Anonymous"}</p>
+      <p><strong>Email:</strong> ${x.email}</p>
+      <p><strong>Message:</strong> ${x.message}</p>
+      <p><strong>Status:</strong> <span class="status ${x.status}">${x.status?.toUpperCase()}</span></p>
+      <button onclick="markAsRead('${d.id}')">Mark as Read</button>
+      <button onclick="deleteSupport('${d.id}')">Delete</button>
+      <button onclick="showReplyBox('${d.id}', '${x.email}')">Reply</button>
+      <div id="replyBox-${d.id}" style="display:none; margin-top:10px;">
+        <textarea id="replyText-${d.id}" placeholder="Type your reply..." style="width:100%; min-height:80px;"></textarea>
+        <button onclick="sendReply('${d.id}', '${x.email}')">Send Reply</button>
+      </div>
+    `;
+    c.appendChild(div);
+  });
+}
+
+window.markAsRead = async id => {
+  await updateDoc(doc(db, "supportMessages", id), { status: "read" });
+  loadSupportMessages();
+};
+
+window.deleteSupport = async id => {
+  if (confirm("Delete this support message?")) {
+    await deleteDoc(doc(db, "supportMessages", id));
+    loadSupportMessages();
+  }
+};
+
+window.showReplyBox = (id, email) => {
+  document.getElementById(`replyBox-${id}`).style.display = "block";
+};
+
+window.sendReply = async (id, email) => {
+  const replyText = document.getElementById(`replyText-${id}`).value.trim();
+  if (!replyText) {
+    alert("Please type a reply message.");
+    return;
+  }
+
+  const btn = document.querySelector(`#replyBox-${id} button`);
+  btn.disabled = true;
+  btn.textContent = "Sending...";
+
+  try {
+    await addDoc(collection(db, "supportReplies"), {
+      messageId: id,
+      userEmail: email,
+      replyMessage: replyText,
+      repliedAt: serverTimestamp()
+    });
+
+    alert("Reply saved successfully.");
+    document.getElementById(`replyBox-${id}`).style.display = "none";
+    document.getElementById(`replyText-${id}`).value = "";
+  } catch (error) {
+    console.error("Error sending reply:", error);
+    alert("Error sending reply. Check your console for more details.");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Send Reply";
+  }
+};
+
+// Load support messages on startup
+loadSupportMessages();
+
+
+</script>
+</body>
+</html>

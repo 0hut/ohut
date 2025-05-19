@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Support Center | Ohut</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      padding: 20px;
+      color: #333;
+    }
+    .support-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 25px 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #e74c3c;
+    }
+    input[type="email"], textarea {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 18px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      box-sizing: border-box;
+      resize: vertical;
+      transition: border-color 0.3s ease;
+    }
+    input[type="email"]:focus, textarea:focus {
+      outline: none;
+      border-color: #e74c3c;
+      box-shadow: 0 0 8px rgba(231, 76, 60, 0.3);
+    }
+    button {
+      padding: 14px 22px;
+      border: none;
+      background: #e74c3c;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    button:hover:not(:disabled) {
+      background-color: #c0392b;
+    }
+    h3 {
+      margin-top: 35px;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #e74c3c;
+      padding-bottom: 8px;
+      color: #e74c3c;
+    }
+    .message-card {
+      background: #fefefe;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+       
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .message-card p {
+      margin: 8px 0;
+      line-height: 1.4;
+    }
+    .message-status {
+      color: #888;
+      margin-bottom: 12px;
+    }
+    .admin-reply {
+      margin-top: 15px;
+      background: #f0f3f5;
+      padding: 12px 15px;
+      border-radius: 7px;
+      font-size: 15px;
+      color: #444;
+      border-left: 4px solid #e74c3c;
+      white-space: pre-line;
+      text-align: left;
+    }
+    .no-messages {
+      text-align: right;
+      color: #999;
+      margin-top: 20px;
+    }
+
+
+header {
+        background-color: #032B44;
+        color: white;
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        margin-bottom: 50px;
+        
+    }
+    header h1 {
+        font-size: 30px;
+    }
+    header a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        background-color: #e74c3c;
+        padding: 8px 16px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+          
+    }
+    header a:hover {
+        background-color: #c0392b;
+    }
+     @media (max-width: 600px) {
+        header h1 {
+            font-size: 20px;
+        }
+    }
+    header img {
+      width: 120px;
+      height: auto;
+    }
+      .footer {
+      background-color: #032B44;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+
+    
+<header>
+    <img src="Ohut Logo.png" alt="Logo"> <h1>Support  Chat</h1>
+    <a href="dashboard.html"><i class="fas fa-arrow-left"></i> Back</a>
+</header>
+
+<div class="support-container">
+  
+  <input type="email" id="userEmail" placeholder="Enter your email" required />
+  <textarea id="userMessage" placeholder="Write your message..." rows="5" required></textarea>
+  <button id="sendBtn">Send Message</button>
+
+  <h3>Your Previous Messages:</h3>
+  <div id="messagesContainer" class="no-messages">Enter your email above and leave the input to load messages.</div>
+</div>
+
+ <div class="footer">
+    &copy; 2025 Ohut. All rights reserved.
+  </div>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, query, where, getDocs, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD5d0apSRT-c40McX4V5xlWx7QkqJvJxQ",
+    authDomain: "thirdohut.firebaseapp.com",
+    projectId: "thirdohut",
+    storageBucket: "thirdohut.appspot.com",
+    messagingSenderId: "512435763604",
+    appId: "1:512435763604:web:a495c1a53c18d4acc7f781"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const sendBtn = document.getElementById('sendBtn');
+  const emailInput = document.getElementById('userEmail');
+  const messageInput = document.getElementById('userMessage');
+  const messagesContainer = document.getElementById('messagesContainer');
+
+  async function loadUserMessages(email) {
+    messagesContainer.innerHTML = "Loading messages...";
+    try {
+      // Firestore requires composite indexes for orderBy + where; make sure you create it if needed
+      const q = query(
+        collection(db, "supportMessages"),
+        where("email", "==", email),
+        orderBy("submittedAt", "desc")
+      );
+      const snap = await getDocs(q);
+
+      messagesContainer.innerHTML = "";
+      if (snap.empty) {
+        messagesContainer.innerHTML = "<p class='no-messages'>No messages found.</p>";
+        return;
+      }
+
+      for (const docSnap of snap.docs) {
+        const data = docSnap.data();
+        const msgDiv = document.createElement("div");
+        msgDiv.className = "message-card";
+        msgDiv.innerHTML = `
+          <p><strong>You:</strong><br>${escapeHTML(data.message)}</p>
+          <p class="message-status"><em>Status:</em> ${data.status?.toUpperCase() || "PENDING"}</p>
+          <div id="replies-${docSnap.id}">Loading replies...</div>
+        `;
+        messagesContainer.appendChild(msgDiv);
+
+        // Load replies for this message
+        await loadReplies(docSnap.id);
+      }
+    } catch (error) {
+      console.error("Error loading messages:", error);
+      messagesContainer.innerHTML = "<p class='no-messages'>Error loading messages. Please try again later.</p>";
+    }
+  }
+
+  async function loadReplies(messageId) {
+    try {
+      // Adjust 'messageId' field name to match your Firestore documents
+      const q = query(collection(db, "supportReplies"), where("messageId", "==", messageId));
+      const snap = await getDocs(q);
+      const container = document.getElementById(`replies-${messageId}`);
+      if (!container) return; // Safety check
+      if (snap.empty) {
+        container.innerHTML = "<p><em>No reply yet.</em></p>";
+        return;
+      }
+      container.innerHTML = "";
+      snap.forEach(d => {
+        const r = d.data();
+        const div = document.createElement("div");
+        div.className = "admin-reply";
+        div.innerHTML = `<strong>Admin reply:</strong><br>${escapeHTML(r.replyMessage || r.reply || "(No reply text)")}`;
+        container.appendChild(div);
+      });
+    } catch (error) {
+      console.error("Error loading replies:", error);
+    }
+  }
+
+  sendBtn.addEventListener('click', async () => {
+    const email = emailInput.value.trim();
+    const message = messageInput.value.trim();
+    if (!email || !message) {
+      alert("Please enter both your email and message.");
+      return;
+    }
+
+    sendBtn.disabled = true;
+    sendBtn.textContent = "Sending...";
+
+    try {
+      await addDoc(collection(db, "supportMessages"), {
+        email: email,
+        message: message,
+        status: "pending",
+        submittedAt: serverTimestamp()
+      });
+      alert("Message sent successfully.");
+      messageInput.value = "";
+      loadUserMessages(email);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      alert("Error sending message. Please try again.");
+    } finally {
+      sendBtn.disabled = false;
+      sendBtn.textContent = "Send Message";
+    }
+  });
+
+  // Load messages when email input loses focus
+  emailInput.addEventListener('blur', () => {
+    const email = emailInput.value.trim();
+    if (email) {
+      loadUserMessages(email);
+    } else {
+      messagesContainer.innerHTML = "<p class='no-messages'>Enter your email above and leave the input to load messages.</p>";
+    }
+  });
+
+  // Helper function to escape HTML to prevent XSS in messages
+  function escapeHTML(str) {
+    return str.replace(/[&<>"']/g, function(m) {
+      return ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[m];
+    });
+  }
+</script>
+
+</body>
+</html>

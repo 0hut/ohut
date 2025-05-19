@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interest Log | Ohut </title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 0;
+    }
+
+ 
+    c:\Users\DECISION\Documents\Doc.docx footer {
+      background-color: #032B44;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    main {
+      padding: 30px 20px 80px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    #balance {
+      background-color: #032B44;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+
+    #balance h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .allDetails {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: space-between;
+    }
+
+    .DetailsA {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      flex: 1 1 calc(20% - 20px);
+      min-width: 180px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .DetailsA:hover {
+      transform: translateY(-5px);
+    }
+
+    .DetailsA h5 {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #032B44;
+      padding: 0px;
+
+      margin-top: 0px;
+    }
+
+    .DetailsA p {
+      margin: 0;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: grey;
+    }
+
+    .DetailsA span {
+      color: green;
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      .DetailsA {
+        flex: 1 1 calc(50% - 20px);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .DetailsA {
+        flex: 1 1 100%;
+      }
+    }
+    h1 {color: white;}
+
+
+    
+  .footer {
+    background-color: #032B44;
+    color: #fff;
+    text-align: center;
+    padding: 15px;
+    margin-top: 50px;
+  }
+
+    header {
+        background-color: #032B44;
+        color: white;
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+           }
+    header h1 {
+        font-size:30px;
+    }
+    header a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        background-color: #e74c3c;
+        padding: 8px 16px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+          
+    }
+    header a:hover {
+        background-color: #c0392b;
+    }
+     @media (max-width: 600px) {
+        header h1 {
+            font-size: 20px;
+        }
+    }
+    header img {
+      width: 120px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+
+    
+<header>
+    <img src="Ohut Logo.png" alt="Logo"> <h1>Interest Log</h1>
+    <a href="dashboard.html"><i class="fas fa-arrow-left"></i> Back</a>
+</header>
+
+
+
+  <main>
+    
+
+    <section id="balance">
+      <h2>Total Interest: <i class="fa-solid fa-naira-sign"></i> <span id="totalInterest">Loading…</span></h2>
+    </section>
+
+    <div class="allDetails">
+      <div class="DetailsA"><h5>Bronze</h5><p><b>Interest: <i class="fa-solid fa-naira-sign"></i></b> <span id="pack1"></span></p></div>
+      <div class="DetailsA"><h5>Silver</h5><p><b>Interest:<i class="fa-solid fa-naira-sign"></i></b> <span id="pack2"></span></p></div>
+      <div class="DetailsA"><h5>Gold</h5><p><b>Interest:<i class="fa-solid fa-naira-sign"></i></b> <span id="pack3"></span></p></div>
+      <div class="DetailsA"><h5>Platinum</h5><p><b>Interest:<i class="fa-solid fa-naira-sign"></i></b> <span id="pack4"></span></p></div>
+      <div class="DetailsA"><h5>Diamond</h5><p><b>Interest:<i class="fa-solid fa-naira-sign"></i></b> <span id="pack5"></span></p></div>
+    </div>
+  </main>
+
+  <div class="footer">
+    &copy; 2025 Ohut. All Rights Reserved.
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD5d0apSRT-c40McXQ4V5xlWx7QkqJvJxQ",
+      authDomain: "thirdohut.firebaseapp.com",
+      projectId: "thirdohut",
+      storageBucket: "thirdohut.appspot.com",
+      messagingSenderId: "512435763604",
+      appId: "1:512435763604:web:a495c1a53c18d4acc7f781"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const PACKS = [
+      { key: 'pack1', amount: 2000 },
+      { key: 'pack2', amount: 4000 },
+      { key: 'pack3', amount: 8000 },
+      { key: 'pack4', amount: 10000 },
+      { key: 'pack5', amount: 100000 },
+    ];
+
+    function getUserId() {
+      return localStorage.getItem('loggedInUserId') || 'defaultUser';
+    }
+
+    async function getPackValues(userId, key) {
+      try {
+        const userDoc = await getDoc(doc(db, "users", userId));
+        const history = userDoc.exists() ? userDoc.data()[`${key}History`] : "";
+        return history ? history.split(',').map(val => parseFloat(val.trim())) : [];
+      } catch (error) {
+        console.error('Error getting pack values:', error);
+        return [];
+      }
+    }
+
+    async function generateAndUpdateInterestLog(userId) {
+      try {
+        const userRef = doc(db, "users", userId);
+        const userSnap = await getDoc(userRef);
+        const data = userSnap.exists() ? userSnap.data() : {};
+
+        const lastTime = data.lastCalculationTime || Date.now();
+        const currentTime = Date.now();
+        const timeElapsed = (currentTime - lastTime) / 1000;
+
+        const interestLog = {};
+        const updatePayload = {};
+        let totalNewInterest = 0;
+
+        for (const { key } of PACKS) {
+          const history = await getPackValues(userId, key);
+          const newInterest = history.reduce((sum, val) => sum + val * 0.2 * timeElapsed / (60 * 60 * 24), 0);
+
+          const interestKey = `${key}Interest`;
+          const currentTotal = data[interestKey] || 0;
+          const updatedTotal = currentTotal + newInterest;
+
+          interestLog[key] = updatedTotal;
+          updatePayload[interestKey] = updatedTotal;
+          totalNewInterest += newInterest;
+        }
+
+        updatePayload.interestBln = (data.interestBln || 0) + totalNewInterest;
+        updatePayload.lastCalculationTime = currentTime;
+
+        await updateDoc(userRef, updatePayload);
+
+        interestLog.totalInterest = Object.values(interestLog).reduce((a, b) => a + b, 0);
+        return interestLog;
+      } catch (error) {
+        console.error('Error generating interest log:', error);
+        return {};
+      }
+    }
+
+    async function displayInterestLog() {
+      const userId = getUserId();
+      const log = await generateAndUpdateInterestLog(userId);
+
+      for (const { key } of PACKS) {
+        const element = document.getElementById(key);
+        if (element && log[key] !== undefined) {
+          element.textContent = log[key].toFixed(2);
+        }
+      }
+
+      const totalElem = document.getElementById("totalInterest");
+      if (totalElem && log.totalInterest !== undefined) {
+        totalElem.textContent = log.totalInterest.toFixed(2);
+      }
+    }
+
+    window.addEventListener('load', displayInterestLog);
+  </script>
+
+</body>
+</html>

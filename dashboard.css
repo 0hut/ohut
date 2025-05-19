@@ -1,0 +1,478 @@
+
+button img {
+width: 35px;
+height: auto;
+}
+
+.referals {
+width: 90%;
+height: 100%;
+margin-left: 5%;
+}
+.referals h1 {
+font-size: 16px;
+
+}
+
+.refBox {
+width: 100%;
+height: 40px;
+border: 1px solid grey;
+border-radius: 10px;
+margin-top: 10px;
+}
+.refTree {
+width:  90%;
+height: 200px;
+
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+border-radius: 10px;
+margin-left: 5%;
+margin-top: 10px;
+background-color: white;
+margin-bottom: 100px;
+}
+
+.refTree h3{
+width:  100%;
+border-bottom: 1px solid grey;
+text-align: center;
+height: 40px;
+margin-top: 0px;
+padding-top: 20px;
+}
+
+body {
+
+font-family: 'Poppins', sans-serif;
+background-color: #eee;
+height: 100hv;
+width: 100%;
+padding: 0px;
+margin: 0px;
+}
+
+
+
+.viewLog {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+width: 90%;
+margin-left: 5%;
+background-color: #eee;
+margin-top: 20px;
+border-radius: 10px;
+}
+.imgBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+transition: transform 0.3s ease;
+}
+
+
+.imgBox:hover {
+  transform: translateY(-5px);
+}
+.imgBox img {
+border-radius: 20px;
+width: 100px;
+height: auto;
+border: 1px solid white;
+
+box-shadow: 0px -2px 1px rgba(0, 0, 0, 0.5);
+
+}
+
+.container {
+width: 100%;
+
+margin: 0px;
+
+}
+
+.headingBox {
+padding: 10px;
+/* margin-left: 60%; */
+border-radius: 10px;
+border: 1px solid #032B44;
+right: 5%;
+position: absolute;
+margin-top: 50px;
+background-color: white;
+
+}
+
+select {
+color: black;
+height: 40px;
+font-size: 15px;
+
+width: 150px;
+
+}
+
+.logo img {
+width: 150px;
+height: auto;
+position: relative;
+
+}
+
+
+
+
+/*Account Balance*/
+.AcctBln {
+width: 90%;
+height: 100px;
+background-color: #032B44;
+border-radius: 10px;
+margin-left: 5%;
+color: white;
+margin-top: -30px;
+padding-top: 10px;
+}
+
+
+.AcctBln p {
+padding-left: 20px; 
+}
+.AcctBln h1 {
+padding-left: 20px;
+font-size: 20px;
+font-weight: bold;
+margin-top: -10px;
+padding-top: 0px;
+margin-bottom: 20px;
+}
+
+#AccountBln {
+  font-size: 25px;
+  font-weight: bold;
+  }
+  .AcctBln img {
+  width: 200px;
+  height: auto;
+  position: absolute;
+  right: 5%;
+  margin-top: -55px;
+  padding-top: -10px;
+  padding-right: 20px;
+  } 
+
+.slider-container {
+    position: relative;
+    width: 90%;
+ 
+margin-top: 20px;
+    overflow: hidden;
+margin-left: 5%;
+}
+
+.slider {
+    display: flex;
+    position: relative;
+    width: 1400px; /* 7 boxes * 200px */
+    transition: transform 0.5s ease-in-out;
+}
+
+.box {
+    width: 170px;
+    height: 70px;
+    background-color: #ccc;
+border-radius: 10px;
+margin-right: 15px;
+padding-left: 20px;
+
+} 
+
+
+.box p {
+font-size: 14px;
+color: white;
+padding: 0px;
+font-weight: bold;
+margin-bottom: 0px;
+}
+.box h2 {
+font-size: 19px;
+color: white;
+padding-top: 0px;
+margin-top: 0px;
+}
+.box1 {
+      background: Linear-gradient(to right, black, #032B44, #032B44);
+/* #064A7A
+#0868A4
+#0A7DB8*/
+}
+
+.box2 {
+  background: Linear-gradient(to right, black, #032B44, #032B44);
+
+}
+
+.box3 {
+
+  background: Linear-gradient(to right, black, #032B44, #032B44);
+
+}
+
+.box4 {
+    background: Linear-gradient(to right, black, #032B44, #032B44);
+}
+
+.box5 {
+      background: Linear-gradient(to right, black, #032B44, #032B44);
+}
+
+.box6 {
+      background: Linear-gradient(to right, black, #032B44, #032B44);
+}
+
+.box7 {
+      background: Linear-gradient(to right, black, #032B44, #032B44);
+}
+
+
+
+
+
+
+
+/*investment Area*/
+
+
+
+.packages {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    /* max-width: 1200px; */
+    /* margin: 0 auto; */
+    padding: 20px;
+
+
+ height:  100%;
+
+background-color: #032B44;
+padding-bottom: 50px;
+margin-top: 20px;
+border-top-left-radius: 100%;
+border-top-right-radius: 0px;
+}
+.investBox1 {
+    flex: 1 1 calc(33.333% - 40px); /* 3 per row, accounting for gap */
+    max-width: calc(33.333% - 40px);
+    min-width: 250px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    text-align: center;
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.investBox1:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+}
+
+.investBoxGroup img {
+    max-width: 100px;
+    margin-bottom: 10px;
+}
+
+.investBoxGroup h1 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.investBoxGroup p {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.investButton {
+    background: #e74c3c;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.investButton:hover {
+    background: #333;
+}
+
+/* Tablet: 2 per row */
+@media (max-width: 1024px) {
+    .investBox1 {
+        flex: 1 1 calc(50% - 40px);
+        max-width: calc(50% - 40px);
+    }
+}
+
+/* Mobile: 1 per row */
+@media (max-width: 600px) {
+    .investBox1 {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+}
+
+
+.investText {
+text-align: center;
+margin-top: 25px;
+color: #444;
+padding: 0px;
+font-weight: bold;
+}
+
+
+
+.footer {
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 15px;
+   
+}
+  .referral {
+width: 100%;
+ background-color: #032B44; 
+height: 100%;
+margin: 0px;
+border-radius: 0;
+display: flex;
+justify-content: center;
+align-items: center;
+border-top: 4px solid rgba(187, 183, 183, 0.719);
+padding-bottom: 100px;
+padding-left: 0px;
+}
+.referral input {
+width: 80%;
+height: 40px;
+border-top-left-radius: 30px;
+border-bottom-left-radius: 30px;
+border-top-right-radius: 0px;
+border-bottom-right-radius: 0px;
+background-color: #eee;
+border: none; 
+}
+
+.referralGroup h4 {
+text-align: center;
+color: #eee;
+font-size: 20px;
+}
+
+.referral p {
+text-align: center;
+}
+.refBtn {
+font-size: 16px;
+background-color:  #e74c3c;
+width: 15%;
+height: 42px;
+position: absolute;
+color: white;
+border-top-right-radius: 30px;
+border-bottom-right-radius: 30px;
+border: 1px solid white;
+padding-left: 0px;
+}
+.refBtn:hover {
+background-color: #333;
+
+}
+
+.referralGroup {
+  padding: 0px;
+  margin: 0px;
+  
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+  #viewAllBtn {
+    display: block;
+    margin-left: 10px;
+  }
+
+  #hideViewAll{
+    display: none;
+  }
+  
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  #viewAllBtn {
+    display: block;
+        margin-left: 10px;
+  }
+
+  #hideViewAll{
+    display: none;
+  }
+}
+
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  #viewAllBtn {
+    display: none;
+  }
+
+  #hideViewAll{
+    display: block;
+  }
+}
+
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  #viewAllBtn {
+    display: none;
+  }
+
+  #hideViewAll{
+    display: block;
+  }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+  #viewAllBtn {
+    display: none;
+  }
+
+  #hideViewAll{
+    display: block;
+  }
+}
+
+
+
+/* Extra extra large devices (very large monitors, 1400px and up) */
+@media (min-width: 1400px) {
+  #viewAllBtn {
+    display: none;
+  }
+
+  #hideViewAll{
+    display: block;
+  }
+}

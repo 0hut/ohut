@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register & Login | Ohut</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!--<link rel="stylesheet" href="style.css">-->
+</head>
+<body>
+ 
+<style>
+  /* Global Reset */
+  * {
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  /* Container Style */
+  .container {
+    background: #fff;
+    max-width: 400px;
+    width: 100%;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .container img {
+    width: 120px;
+    margin-bottom: -20px;
+    margin-top: -20px;
+  }
+
+  h1 {
+    color: #032B44;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+
+  /* Input Group Style */
+  .fly, .input-group {
+    position: relative;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  .fly i, .input-group i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    font-size: 1rem;
+  }
+
+  .fly input, .input-group input {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #fff;
+    color: #333;
+    transition: border 0.3s;
+  }
+
+  .fly input:focus, .input-group input:focus {
+    border-color: #0568BF;
+    outline: none;
+  }
+
+  /* Floating Labels */
+  .fly label, .input-group label {
+    position: absolute;
+    left: 40px;
+    top: 12px;
+    font-size: 14px;
+    color: #999;
+    pointer-events: none;
+    transition: 0.3s;
+  }
+
+  .fly input:focus + label,
+  .fly input:not(:placeholder-shown) + label,
+  .input-group input:focus + label,
+  .input-group input:not(:placeholder-shown) + label {
+    top: -10px;
+    left: 35px;
+    font-size: 12px;
+    color: #0568BF;
+    background: #fff;
+    padding: 0 5px;
+  }
+
+  /* Button */
+  .btn, button {
+    width: 100%;
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
+  }
+
+  .btn:hover, button:hover {
+    background: #333;
+  }
+
+  /* Message */
+  .messageDiv {
+    background: #d9534f;
+    color: #fff;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    display: none;
+    font-size: 0.9rem;
+  }
+
+  /* Links & recover */
+  .recover, .links {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #555;
+  }
+
+  .recover a {
+    color: #0568BF;
+    text-decoration: none;
+  }
+
+  .recover a:hover {
+    text-decoration: underline;
+  }
+
+  .links p {
+    margin: 15px 0 5px;
+  }
+
+  .links button {
+    background: transparent;
+    color: #0568BF;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+  }
+
+  .links button:hover {
+    text-decoration: underline;
+  }
+
+  /* Separator */
+  .or {
+    color: #aaa;
+    margin: 20px 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 450px) {
+    .container {
+      margin: 20px;
+      padding: 1.5rem;
+    }
+  }
+
+
+.input-group .toggle-password, .fly .toggle-password {
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #999;
+  font-size: 1rem;
+  margin-left: 90%;
+}
+
+@keyframes slideFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-title {
+  animation: slideFadeIn 0.8s ease forwards;
+}
+
+
+</style>
+
+
+  <div class="container" id="signup" style="display:none;">
+
+<img src="Ohut Logo.png"/>
+
+    <form method="post" action="">
+ 
+      <div class="box-container">
+        <div class="box">
+    <h1 class="form-title">Sign Up</h1>
+<p>Your referral: <span id="referralDisplay"></span></p>
+
+    <div id="signUpMessage" class="messageDiv" style="display:none;"></div>
+
+          <div class="fly">
+            <i class="fas fa-user"></i>
+            <input type="text" id="fName" placeholder="First Name" required>
+            <label for="fname">First Name</label>
+          </div>
+          <div class="fly">
+            <i class="fas fa-user"></i>
+            <input type="text" id="lName" placeholder="Last Name" required>
+            <label for="lName">Last Name</label>
+          </div>
+          <div class="fly">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="rEmail" placeholder="Email" required>
+            <label for="rEmail">Email</label>
+          </div>
+          <div class="fly">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="rPassword" placeholder="Password" required>
+            <label for="rPassword">Password</label>
+            <i class="fas fa-eye toggle-password" toggle="#rPassword"></i>
+            
+          </div>
+          <button class="btn" id="submitSignUp">Create</button>
+        </div>
+      </div>
+    </form>
+    <p class="or">----------or--------</p>
+    <div class="icons"></div>
+    <div class="links">
+      <p>Already Have Account ?</p>
+      <button id="signInButton">Sign In</button>
+    </div>
+  </div>
+
+  <div class="container" id="signIn">
+    <div class="env">
+       <img src="Ohut Logo.png"/> 
+    <h1 class="form-title">Sign In</h1>
+      <form method="post" action="">
+        <div id="signInMessage" class="messageDiv" style="display:none;"></div>
+<div class="input-group">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="email" placeholder="Email" required>
+          <label for="email">Email</label>
+        </div>
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" placeholder="Password" required>
+          <label for="password">Password</label>
+          <i class="fas fa-eye toggle-password" toggle="#password"></i>
+        </div>
+        <p class="recover">
+          <a href="recoverPassword">Recover Password</a>
+        </p>
+        <button class="btn" id="submitSignIn">Sign In</button>
+      </form>
+      <div class="icons"></div>
+      <div class="links">
+        <p>Not a member yet?</p>
+        <button id="signUpButton">Sign Up</button>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+<div class="container" id="recoverPassword" style="display:none;">
+    <img src="Ohut Logo.png"/>
+    <h1>Recover Password</h1>
+    <form method="post" action="">
+      <div id="recoverMessage" class="messageDiv" style="display:none;"></div>
+      <div class="input-group">
+        <i class="fas fa-envelope"></i>
+        <input type="email" id="recoverEmail" placeholder="Email" required>
+        <label for="recoverEmail">Email</label>
+      </div>
+      <button class="btn" id="submitRecover">Send Reset Link</button>
+    </form>
+    <div class="links">
+      <p>Back to?</p>
+      <button id="backToSignIn">Sign In</button>
+    </div>
+</div>
+
+
+
+
+<script type="module">
+import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { 
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  updateDoc,
+  collection,
+  query,
+  where,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+// Firebase Config 
+const firebaseConfig = {
+    apiKey: "AIzaSyD5d0apSRT-c40McXQ4V5xlWx7QkqJvJxQ",
+    authDomain: "thirdohut.firebaseapp.com",
+    projectId: "thirdohut",
+    storageBucket: "thirdohut.firebasestorage.app",
+    messagingSenderId: "512435763604",
+    appId: "1:512435763604:web:a495c1a53c18d4acc7f781"
+  };
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Show message utility
+function showMessage(message, divId) {
+  const div = document.getElementById(divId);
+  div.style.display = "block";
+  div.innerHTML = message;
+  div.style.opacity = 1;
+  setTimeout(() => {
+    div.style.opacity = 0;
+  }, 5000);
+}
+
+// --- SIGN UP ---
+document.getElementById('submitSignUp').addEventListener('click', async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById('rEmail').value;
+  const password = document.getElementById('rPassword').value;
+  const firstName = document.getElementById('fName').value;
+  const lastName = document.getElementById('lName').value;
+  const fullName = `${firstName} ${lastName}`;
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const referredBy = urlParams.get('ref') || null;
+
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    const referralCode = user.uid.slice(0, 6);
+
+    await setDoc(doc(db, "users", user.uid), {
+      email,
+      firstName,
+      lastName,
+      fullName,
+      balance: 10000,
+      interestBln: 0,
+      lastCalculationTime: Date.now(),
+      referralCode,
+      referredBy,
+      referralBonus: 0,
+      hasMadeFirstDeposit: false,  // NEW: track if user made first deposit
+      pack1History: "",
+      pack2History: "",
+      pack3History: "",
+      pack4History: "",
+      pack5History: ""
+    });
+
+    localStorage.setItem("loggedInUserId", user.uid);
+    localStorage.setItem("userName", fullName);
+    showMessage("Account Created Successfully", "signUpMessage");
+    window.location.href = "signUp.html";
+  } catch (error) {
+    if (error.code === "auth/email-already-in-use") {
+      showMessage("Email already exists!", "signUpMessage");
+    } else if (error.code === "auth/weak-password") {
+      showMessage("Password is too weak", "signUpMessage");
+    } else {
+      showMessage("Failed to create account", "signUpMessage");
+    }
+  }
+});
+
+// --- SIGN IN ---
+document.getElementById('submitSignIn').addEventListener('click', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    if (!userDoc.exists()) {
+      showMessage("User data not found. Please contact support.", "signInMessage");
+      return;
+    }
+
+    const userData = userDoc.data();
+    const fullName = userData.fullName || "";
+
+    localStorage.setItem("loggedInUserId", user.uid);
+    localStorage.setItem("userName", fullName);
+
+    showMessage("Login successful", "signInMessage");
+    window.location.href = "dashboard.html";
+  } catch (error) {
+    if (
+      error.code === "auth/invalid-credential" ||
+      error.code === "auth/user-not-found" ||
+      error.code === "auth/wrong-password"
+    ) {
+      showMessage("Incorrect email or password", "signInMessage");
+    } else {
+      showMessage("Login failed. Try again later.", "signInMessage");
+    }
+  }
+});
+
+// --- TOGGLE FORMS ---
+document.getElementById("signUpButton").addEventListener("click", () => {
+  document.getElementById("signIn").style.display = "none";
+  document.getElementById("signup").style.display = "block";
+});
+
+document.getElementById("signInButton").addEventListener("click", () => {
+  document.getElementById("signIn").style.display = "block";
+  document.getElementById("signup").style.display = "none";
+});
+
+function togglePassword(inputId, icon) {
+  const input = document.getElementById(inputId);
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.classList.remove('fa-eye');
+    icon.classList.add('fa-eye-slash');
+  } else {
+    input.type = 'password';
+    icon.classList.remove('fa-eye-slash');
+    icon.classList.add('fa-eye');
+  }
+}
+
+// --- PASSWORD RECOVERY ---
+document.querySelector(".recover a").addEventListener("click", (e) => {
+  e.preventDefault();
+  document.getElementById("signIn").style.display = "none";
+  document.getElementById("recoverPassword").style.display = "block";
+});
+
+document.getElementById("backToSignIn").addEventListener("click", () => {
+  document.getElementById("recoverPassword").style.display = "none";
+  document.getElementById("signIn").style.display = "block";
+});
+
+document.getElementById("submitRecover").addEventListener("click", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("recoverEmail").value;
+
+  try {
+    await sendPasswordResetEmail(auth, email);
+    showMessage("Password reset email sent! Check your inbox.", "recoverMessage");
+  } catch (error) {
+    if (error.code === "auth/user-not-found") {
+      showMessage("No user found with this email.", "recoverMessage");
+    } else if (error.code === "auth/invalid-email") {
+      showMessage("Invalid email address.", "recoverMessage");
+    } else {
+      showMessage("Failed to send reset email. Try again later.", "recoverMessage");
+    }
+  }
+});
+
+// --- TOGGLE PASSWORD VISIBILITY ---
+document.querySelectorAll('.toggle-password').forEach(icon => {
+  icon.addEventListener('click', () => {
+    const input = document.querySelector(icon.getAttribute('toggle'));
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    } else {
+      input.type = 'password';
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
+    }
+  });
+});
+
+// ----- NEW: DEPOSIT + REFERRAL BONUS HANDLER -----
+
+/**
+ * Handles user deposit and gives referral bonus if first deposit
+ * @param {string} userId - The ID of the user making deposit
+ * @param {number} depositAmount - The amount deposited
+ * @returns {object} - { success: boolean, newBalance: number }
+ */
+async function handleDeposit(userId, depositAmount) {
+  if (depositAmount <= 0) throw new Error("Deposit must be greater than zero");
+
+  const userRef = doc(db, "users", userId);
+  const userSnap = await getDoc(userRef);
+  if (!userSnap.exists()) throw new Error("User not found");
+
+  const userData = userSnap.data();
+
+  // Update user's balance
+  const newBalance = (userData.balance || 0) + depositAmount;
+
+  // Update user's balance and check if first deposit
+  await updateDoc(userRef, {
+    balance: newBalance
+  });
+
+  // Check if first deposit bonus/referral bonus should be given
+  if (!userData.hasMadeFirstDeposit) {
+    // Mark first deposit as done
+    await updateDoc(userRef, {
+      hasMadeFirstDeposit: true
+    });
+
+    // Check if user was referred by someone
+    const referredByCode = userData.referredBy;
+    if (referredByCode) {
+      // Find referrer by referralCode
+      const q = query(collection(db, "users"), where("referralCode", "==", referredByCode));
+      const refSnap = await getDocs(q);
+
+      if (!refSnap.empty) {
+        const refDoc = refSnap.docs[0];
+        const refData = refDoc.data();
+        const refId = refDoc.id;
+
+        // Calculate 25% of deposit as referral bonus
+        const referralBonusAmount = depositAmount * 0.25;
+
+        const refNewBalance = (refData.balance || 0) + referralBonusAmount;
+        const refNewBonus = (refData.referralBonus || 0) + referralBonusAmount;
+
+        // Update referrer's balance and referral bonus
+        await updateDoc(doc(db, "users", refId), {
+          balance: refNewBalance,
+          referralBonus: refNewBonus
+        });
+      }
+    }
+  }
+
+  return { success: true, newBalance };
+}
+
+// --- EXAMPLE DEPOSIT FORM HANDLER ---
+// Add this in your HTML page where deposit is done with matching IDs
+
+document.getElementById('submitDeposit')?.addEventListener('click', async (e) => {
+  e.preventDefault();
+
+  const depositInput = document.getElementById('depositAmount');
+  if (!depositInput) return; // no deposit form on this page
+
+  const depositAmount = parseFloat(depositInput.value);
+  if (isNaN(depositAmount) || depositAmount <= 0) {
+    showMessage("Please enter a valid deposit amount", "depositMessage");
+    return;
+  }
+
+  const userId = localStorage.getItem("loggedInUserId");
+  if (!userId) {
+    showMessage("You must be logged in to deposit.", "depositMessage");
+    return;
+  }
+
+  try {
+    const result = await handleDeposit(userId, depositAmount);
+    if (result.success) {
+      showMessage(`Deposit successful! New balance: ${result.newBalance.toFixed(2)}`, "depositMessage");
+      // Optionally clear deposit input after success
+      depositInput.value = '';
+    }
+  } catch (error) {
+    showMessage("Deposit failed: " + error.message, "depositMessage");
+  }
+});
+
+
+
+const urlParams = new URLSearchParams(window.location.search);
+const referredBy = urlParams.get('ref') || null;
+console.log('Referral code detected:', referredBy);
+
+document.getElementById('referralDisplay').textContent = referredBy || "No referral";
+
+</script>
+
+
+
+<!-- working well but referrala not proper
+  <script type="module">
+
+
+    import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+// Firebase Config 
+const firebaseConfig = {
+    apiKey: "AIzaSyD5d0apSRT-c40McXQ4V5xlWx7QkqJvJxQ",
+    authDomain: "thirdohut.firebaseapp.com",
+    projectId: "thirdohut",
+    storageBucket: "thirdohut.firebasestorage.app",
+    messagingSenderId: "512435763604",
+    appId: "1:512435763604:web:a495c1a53c18d4acc7f781"
+  };
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Show message utility
+function showMessage(message, divId) {
+  const div = document.getElementById(divId);
+  div.style.display = "block";
+  div.innerHTML = message;
+  div.style.opacity = 1;
+  setTimeout(() => {
+    div.style.opacity = 0;
+  }, 5000);
+}
+
+// Sign Up
+
+document.getElementById('submitSignUp').addEventListener('click', async (e) => {
+  e.preventDefault();
+
+  // Get form values
+  const email = document.getElementById('rEmail').value;
+  const password = document.getElementById('rPassword').value;
+  const firstName = document.getElementById('fName').value;
+  const lastName = document.getElementById('lName').value;
+  const fullName = `${firstName} ${lastName}`;
+
+  // Capture referral code from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const referredBy = urlParams.get('ref') || null; // Default to null if no referral code
+
+  try {
+    // Create user in Firebase Auth
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Generate referral code
+    const referralCode = user.uid.slice(0, 6); // Use first 6 characters of UID as referral code
+
+    // Save user to Firestore, including referral info
+    await setDoc(doc(db, "users", user.uid), {
+      email,
+      firstName,
+      lastName,
+      fullName,
+      balance: 10000,  // Default balance
+      interestBln: 0,  // Default interest
+      lastCalculationTime: Date.now(),
+      referralCode,  // Store referral code
+      referredBy,  // Store the referrer (if any)
+      referralBonus: 0,  // Default referral bonus
+      pack1History: "",
+      pack2History: "",
+      pack3History: "",
+      pack4History: "",
+      pack5History: ""
+    });
+
+    // If referred by someone, reward the referrer
+    if (referredBy) {
+      const q = query(collection(db, "users"), where("referralCode", "==", referredBy));
+      const refSnap = await getDocs(q);
+      if (!refSnap.empty) {
+        const refDoc = refSnap.docs[0];
+        const refData = refDoc.data();
+        const refId = refDoc.id;
+
+        const newBalance = (refData.balance || 0) + 1000;  // Reward balance
+        const newBonus = (refData.referralBonus || 0) + 1000;  // Add bonus
+
+        await updateDoc(doc(db, "users", refId), {
+          balance: newBalance,
+          referralBonus: newBonus
+        });
+      }
+    }
+
+    // Success message and redirect to dashboard
+    localStorage.setItem("loggedInUserId", user.uid);
+    localStorage.setItem("userName", fullName);
+    showMessage("Account Created Successfully", "signUpMessage");
+    window.location.href = "index.html";  // Redirect to dashboard
+  } catch (error) {
+    const errorCode = error.code;
+    if (errorCode === "auth/email-already-in-use") {
+      showMessage("Email already exists!", "signUpMessage");
+    } else if (errorCode === "auth/weak-password") {
+      showMessage("Password is too weak", "signUpMessage");
+    } else {
+      showMessage("Failed to create account", "signUpMessage");
+    }
+  }
+});
+
+
+// Sign In
+document.getElementById('submitSignIn').addEventListener('click', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Fetch user profile from Firestore
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    if (!userDoc.exists()) {
+      showMessage("User data not found. Please contact support.", "signInMessage");
+      return;
+    }
+
+    const userData = userDoc.data();
+    const fullName = userData.fullName || "";
+
+    localStorage.setItem("loggedInUserId", user.uid);
+    localStorage.setItem("userName", fullName);
+
+    showMessage("Login successful", "signInMessage");
+    window.location.href = "dashboard.html"; // Redirect to dashboard
+  } catch (error) {
+    const errorCode = error.code;
+    if (
+      errorCode === "auth/invalid-credential" ||
+      errorCode === "auth/user-not-found" ||
+      errorCode === "auth/wrong-password"
+    ) {
+      showMessage("Incorrect email or password", "signInMessage");
+    } else {
+      showMessage("Login failed. Try again later.", "signInMessage");
+    }
+  }
+});
+
+// Toggle Forms
+document.getElementById("signUpButton").addEventListener("click", () => {
+  document.getElementById("signIn").style.display = "none";
+  document.getElementById("signup").style.display = "block";
+});
+
+document.getElementById("signInButton").addEventListener("click", () => {
+  document.getElementById("signIn").style.display = "block";
+  document.getElementById("signup").style.display = "none";
+});
+
+
+
+
+
+
+      
+    function togglePassword(inputId, icon) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+
+
+// Show Recover Password form
+document.querySelector(".recover a").addEventListener("click", (e) => {
+  e.preventDefault();
+  document.getElementById("signIn").style.display = "none";
+  document.getElementById("recoverPassword").style.display = "block";
+});
+
+// Back to Sign In from Recover form
+document.getElementById("backToSignIn").addEventListener("click", () => {
+  document.getElementById("recoverPassword").style.display = "none";
+  document.getElementById("signIn").style.display = "block";
+});
+
+// Handle Password Reset Email
+document.getElementById("submitRecover").addEventListener("click", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("recoverEmail").value;
+
+  try {
+    await sendPasswordResetEmail(auth, email);
+    showMessage("Password reset email sent! Check your inbox.", "recoverMessage");
+  } catch (error) {
+    if (error.code === "auth/user-not-found") {
+      showMessage("No user found with this email.", "recoverMessage");
+    } else if (error.code === "auth/invalid-email") {
+      showMessage("Invalid email address.", "recoverMessage");
+    } else {
+      showMessage("Failed to send reset email. Try again later.", "recoverMessage");
+    }
+  }
+});
+
+
+// Toggle Password Visibility
+document.querySelectorAll('.toggle-password').forEach(icon => {
+  icon.addEventListener('click', () => {
+    const input = document.querySelector(icon.getAttribute('toggle'));
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    } else {
+      input.type = 'password';
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
+    }
+  });
+});
+
+</script> -->
+</body>
+</html>
